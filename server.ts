@@ -1,32 +1,33 @@
 import "dotenv/config";
 import express from "express";
 import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
 const app = express();
 
-// 🔌 Inicialização correta do Prisma Client com a URL do banco
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL,
-    },
-  },
-});
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 app.use(express.json());
 
 // 👤 Rota para Criar Usuário
 app.post('/users', async (req, res) => {
-  const { name, email, cpf } = req.body;
-  try {
-    const newUser = await prisma.user.create({
-      data: { name, email, cpf }
-    });
-    res.status(201).json(newUser);
-  } catch (error) {
-    res.status(400).json({ error: "Erro ao criar usuário." });
-  }
-});
+    const { name, email, cpf } = req.body;
+    try {
+      const newUser = await prisma.user.create({
+        data: { name, email, cpf }
+      });
+      res.status(201).json(newUser);
+    } catch (error: any) {
+      // 🔍 Isso vai enviar o erro real do Prisma/Banco para o seu Postman!
+      res.status(400).json({ 
+        error: "Erro ao criar usuário.", 
+        details: error.message 
+      });
+    }
+  });
 
 // 📝 Rota para Criar Post
 app.post('/users/:authorId/posts', async (req, res) => {
