@@ -12,6 +12,24 @@ const prisma = new PrismaClient({ adapter });
 
 app.use(express.json());
 
+//rota raiz
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
+
+// Rota para Listar Usuários
+app.get('/users', async (req, res) => {
+    try {
+      const users = await prisma.user.findMany();
+      return res.json(users);
+    } catch (error) {
+      return res.status(500).json({ error: "Erro ao buscar usuários." });
+    }
+});
+
+//rota pra atualizar título, conteúdo ou tag
+
+
 // 👤 Rota para Criar Usuário
 app.post('/users', async (req, res) => {
     const { name, email, cpf } = req.body;
