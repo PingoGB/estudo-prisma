@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frontend API Prisma</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topo">
+    <div>
+      <h1>Teste da API</h1>
+      <p>Interface simples para consumir usuários e posts em http://localhost:3000</p>
+    </div>
+    <button id="btnAtualizarUsuarios" type="button">Atualizar usuários</button>
+  </header>
+
+  <main class="container">
+    <section class="grid">
+      <article class="card">
+        <h2>Criar usuário</h2>
+        <form id="formCriarUsuario">
+          <input id="userName" placeholder="Nome" required>
+          <input id="userEmail" type="email" placeholder="Email" required>
+          <input id="userCpf" placeholder="CPF" required>
+          <button type="submit">Cadastrar usuário</button>
+        </form>
+      </article>
+
+      <article class="card">
+        <h2>Buscar usuário por ID</h2>
+        <form id="formBuscarUsuario">
+          <input id="buscarUserId" type="number" min="1" placeholder="ID do usuário" required>
+          <button type="submit">Buscar</button>
+        </form>
+        <div id="resultadoUsuario" class="resultado">Nenhum usuário buscado.</div>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2>Usuários</h2>
+      <div class="tabela-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>CPF</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="usuariosTabela">
+            <tr>
+              <td colspan="5">Carregando usuários...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Criar post</h2>
+        <form id="formCriarPost">
+          <input id="postAuthorId" type="number" min="1" placeholder="ID do autor" required>
+          <input id="postTitle" placeholder="Título" required>
+          <textarea id="postContent" placeholder="Conteúdo" rows="4" required></textarea>
+          <input id="postTag" placeholder="Tag" required>
+          <button type="submit">Criar post</button>
+        </form>
+      </article>
+
+      <article class="card">
+        <h2>Atualizar post</h2>
+        <form id="formAtualizarPost">
+          <input id="updatePostId" type="number" min="1" placeholder="ID do post" required>
+          <input id="updatePostTitle" placeholder="Novo título" required>
+          <textarea id="updatePostContent" placeholder="Novo conteúdo" rows="4" required></textarea>
+          <input id="updatePostTag" placeholder="Nova tag" required>
+          <button type="submit">Atualizar post</button>
+        </form>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Listar posts de um usuário</h2>
+        <form id="formListarPosts">
+          <input id="listarPostsAuthorId" type="number" min="1" placeholder="ID do usuário" required>
+          <button type="submit">Buscar posts</button>
+        </form>
+      </article>
+
+      <article class="card">
+        <h2>Excluir post</h2>
+        <form id="formExcluirPost">
+          <input id="deletePostId" type="number" min="1" placeholder="ID do post" required>
+          <button class="perigo" type="submit">Excluir post</button>
+        </form>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2>Posts encontrados</h2>
+      <div class="tabela-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Conteúdo</th>
+              <th>Tag</th>
+              <th>Author ID</th>
+            </tr>
+          </thead>
+          <tbody id="postsTabela">
+            <tr>
+              <td colspan="5">Busque os posts de um usuário.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

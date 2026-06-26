@@ -3,8 +3,11 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
+import cors from "cors";
+
 
 const app = express();
+app.use(cors());
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
@@ -27,7 +30,43 @@ app.get('/users', async (req, res) => {
     }
 });
 
+// Rota pra buscar usuário por ID
+app.get('/users/:id', async (req, res) => {
+  const {id} = req.params;
+  try{
+    const getUser = await prisma.user.findUnique({
+      where: {id: Number(req.params.id)}
+    })
+    res.json(getUser);
+  } catch (error) {
+    res.status(404).json({ error: "Usuário não encontrado." });
+  }
+})
+
+//rota pra listar todos os posts
+app.get('/posts', async (req, res) => {
+  try {
+    const posts = await prisma.post.findMany();
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao buscar posts." });
+  }
+});
+
 //rota pra atualizar título, conteúdo ou tag
+app.put('/posts/:id', async (req, res)=> {
+  const { title, content, tag } = req.body;
+  try {
+    const updatePost = await prisma.post.update({
+      where: { id: Number(req.params.id) },
+      data: { title, content, tag }
+    });
+    res.json(updatePost);
+  } catch (error) {
+    res.status(400).json({ error: "Erro ao atualizar o post." });
+  }
+}
+)
 
 
 // 👤 Rota para Criar Usuário
@@ -89,6 +128,18 @@ app.delete('/posts/:id', async (req, res) => {
     res.json({ message: "Post deletado com sucesso!", deletedPost });
   } catch (error) {
     res.status(400).json({ error: "Erro ao deletar o post." });
+  }
+});
+
+app.delete('/users/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleteUser = await prisma.user.delete({
+      where: { id: Number(id) }
+    });
+    res.json({ message: "Usuário deletado com sucesso!", deleteUser });
+  } catch (error) {
+    res.status(400).json({ error: "Erro ao deletar o usuário." });
   }
 });
 
